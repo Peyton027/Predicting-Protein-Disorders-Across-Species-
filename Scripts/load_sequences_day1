@@ -1,0 +1,33 @@
+
+#System Setup 
+install.packages("tidyverse")
+install.packages("Biostrings")
+BiocManager::install("Biostrings")
+library(ggplot2)
+human_seq <- readAAStringSet("filepath")
+
+#Creating the dataframe 
+protein_ids <- names(human_seq)
+sequences <- as.character(human_seq)
+human_df <- data.frame(
+  protein_id = protein_ids,
+  sequence = sequences)
+human_df$seq_length <- nchar(human_df$sequence)
+
+#Sanity Check 
+p95 <- quantile(human_df$seq_length, 0.95)
+ggplot(human_df, aes(x = seq_length)) +
+  geom_histogram(
+    binwidth = 100,
+    fill = "#69b3a2",
+    color = "#e9ecef",
+    alpha = 0.9
+  ) +
+  coord_cartesian(xlim = c(0, p95)) +
+  labs(
+    title = "Protein Length Distribution
+    x = "Sequence Length",
+    y = "Count"
+  )
+
+
