@@ -1,1 +1,5 @@
 
+#System Setup 
+install.packages("tidyverse")
+install.packages("Biostrings")
+BiocManager::install("Biostrings")
