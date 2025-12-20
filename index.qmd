@@ -20,7 +20,7 @@ editor: visual
 library(tidyverse)
 library(Biostrings)
 
-human_seq <- readAAStringSet("C:/Users/USER/Desktop/Protein Disorder Project/data/UP000005640_9606.fasta")
+human_seq <- readAAStringSet("data/UP000005640_9606.fasta")
 
 ```
 
