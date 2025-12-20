@@ -1,0 +1,81 @@
+---
+title: "Predicting Protein Disorders Across Species"
+author: "Peyton Chiu"
+format: html
+editor: visual
+---
+
+## Setting up the analysis environment
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+#| results: false
+
+
+
+# load the nessacary libraries and the fasta file
+
+library(tidyverse)
+library(Biostrings)
+
+human_seq <- readAAStringSet("C:/Users/USER/Desktop/Protein Disorder Project/data/UP000005640_9606.fasta")
+
+```
+
+```{r}
+
+# To make further analysis easier converting our fasta into a dataframe might be prudent
+
+protein_ids <- names(human_seq)
+sequences <- as.character(human_seq)
+
+
+human_df <- data.frame(
+  protein_id = protein_ids,
+  sequence = sequences)
+
+#it might be handy later to add another column to the table that computes sequence length for each ID
+
+human_df$seq_length <- nchar(human_df$sequence)
+
+dim(human_df)
+
+
+
+
+```
+
+Before proceeding, let's do a brief overview on the distribution of sequence lengths for our Protein IDs.
+
+```{r}
+
+# here is a summary of the values distribution
+summary(human_df$seq_length)
+
+```
+
+Inspection of the protein length distribution shows that the majority of human proteins cluster around \~400 amino acids. To better visualize the bulk of the proteome without distortion from a small number of extremely long proteins, we restricted the histogram to the 95th percentile during this exploratory analysis.
+
+```{r}
+
+library(ggplot2)
+
+p95 <- quantile(human_df$seq_length, 0.95)
+
+ggplot(human_df, aes(x = seq_length)) +
+  geom_histogram(
+    binwidth = 100,
+    fill = "#69b3a2",
+    color = "#e9ecef",
+    alpha = 0.9
+  ) +
+  coord_cartesian(xlim = c(0, p95)) +
+  labs(
+    title = "Protein Length Distribution",
+    x = "Sequence Length",
+    y = "Count"
+  )
+
+```
